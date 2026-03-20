@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tracking & Feed Checklist</title>
+<style>
+  :root {
+    --bg: #f5f4f0;
+    --surface: #ffffff;
+    --surface2: #f0ede8;
+    --border: #e2dfd8;
+    --text: #1c1c1a;
+    --text2: #6b6a65;
+    --text3: #9e9c96;
+    --accent: #1c1c1a;
+    --essential: #c8401a;
+    --essential-bg: #fdf0ec;
+    --essential-border: #f5c4b4;
+    --important: #9a6c00;
+    --important-bg: #fdf7e8;
+    --important-border: #f0d890;
+    --advanced: #2a6b4a;
+    --advanced-bg: #edf7f2;
+    --advanced-border: #b4dfc8;
+    --issue: #c8401a;
+    --issue-bg: #fff0ec;
+    --check-size: 18px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Georgia', serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  .page {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 32px 80px;
+  }
+
+  /* Header */
+  .header {
+    margin-bottom: 48px;
+    border-bottom: 2px solid var(--text);
+    padding-bottom: 24px;
+  }
+
+  .header-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  .brand {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text3);
+    font-family: -apple-system, sans-serif;
+  }
+
+  .date {
+    font-size: 11px;
+    color: var(--text3);
+    font-family: -apple-system, sans-serif;
+  }
+
+  h1 {
+    font-size: 32px;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    color: var(--text2);
+    font-family: -apple-system, sans-serif;
+    font-style: italic;
+  }
+
+  /* Tab nav */
+  .tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tab {
+    padding: 12px 24px;
+    font-size: 13px;
+    font-family: -apple-system, sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: var(--text2);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.15s;
+    letter-spacing: 0.02em;
+  }
+
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--text); border-bottom-color: var(--text); }
+
+  /* Panel */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* Client field */
+  .client-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 32px;
+    align-items: center;
+  }
+
+  .client-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    font-family: -apple-system, sans-serif;
+    color: var(--text2);
+  }
+
+  .client-field input {
+    border: none;
+    border-bottom: 1px solid var(--border);
+    background: none;
+    font-size: 13px;
+    font-family: -apple-system, sans-serif;
+    color: var(--text);
+    padding: 4px 2px;
+    width: 200px;
+    outline: none;
+  }
+
+  .client-field input:focus { border-bottom-color: var(--text); }
+
+  /* Progress */
+  .progress-bar-wrap {
+    background: var(--border);
+    border-radius: 2px;
+    height: 3px;
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+
+  .progress-bar {
+    height: 100%;
+    background: var(--text);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+  }
+
+  .progress-label {
+    font-size: 11px;
+    font-family: -apple-system, sans-serif;
+    color: var(--text3);
+    margin-bottom: 32px;
+  }
+
+  /* Section */
+  .section { margin-bottom: 40px; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .tier-badge {
+    font-size: 10px;
+    font-family: -apple-system, sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 2px;
+  }
+
+  .tier-essential { background: var(--essential-bg); color: var(--essential); border: 1px solid var(--essential-border); }
+  .tier-important { background: var(--important-bg); color: var(--important); border: 1px solid var(--important-border); }
+  .tier-advanced { background: var(--advanced-bg); color: var(--advanced); border: 1px solid var(--advanced-border); }
+
+  .section-title {
+    font-size: 15px;
+    font-weight: normal;
+    letter-spacing: 0.01em;
+  }
+
+  .section-desc {
+    font-size: 12px;
+    font-family: -apple-system, sans-serif;
+    color: var(--text2);
+    margin-bottom: 12px;
+    line-height: 1.6;
+  }
+
+  /* Checklist items */
+  .items { display: flex; flex-direction: column; gap: 1px; }
+
+  .item {
+    display: grid;
+    grid-template-columns: 28px 1fr auto;
+    gap: 12px;
+    align-items: start;
+    background: var(--surface);
+    padding: 14px 16px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    border-radius: 0;
+    transition: background 0.1s;
+    position: relative;
+  }
+
+  .item:first-child { border-radius: 8px 8px 0 0; }
+  .item:last-child { border-radius: 0 0 8px 8px; }
+  .item:only-child { border-radius: 8px; }
+  .item + .item { border-top: none; }
+
+  .item:hover { background: #fafaf8; }
+  .item.checked { background: #fafafa; }
+  .item.checked .item-title { color: var(--text2); text-decoration: line-through; text-decoration-color: var(--text3); }
+  .item.checked .item-desc { color: var(--text3); }
+
+  .item.alfa-issue {
+    border-left: 3px solid var(--issue);
+  }
+
+  .item.alfa-issue::before {
+    content: "⚠ Alfa";
+    position: absolute;
+    right: 48px;
+    top: 14px;
+    font-size: 10px;
+    font-family: -apple-system, sans-serif;
+    font-weight: 600;
+    color: var(--issue);
+    letter-spacing: 0.05em;
+  }
+
+  /* Checkbox */
+  .checkbox {
+    width: var(--check-size);
+    height: var(--check-size);
+    border: 1.5px solid var(--border);
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: all 0.15s;
+  }
+
+  .item.checked .checkbox {
+    background: var(--text);
+    border-color: var(--text);
+  }
+
+  .checkmark {
+    display: none;
+    color: white;
+    font-size: 11px;
+    line-height: 1;
+  }
+
+  .item.checked .checkmark { display: block; }
+
+  .item-body { min-width: 0; padding-right: 80px; }
+  .item-title { font-size: 13px; font-family: -apple-system, sans-serif; font-weight: 500; margin-bottom: 3px; color: var(--text); }
+  .item-desc { font-size: 12px; font-family: -apple-system, sans-serif; color: var(--text2); line-height: 1.55; }
+  .item-code { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 10.5px; background: var(--surface2); padding: 1px 5px; border-radius: 3px; color: var(--text); }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-family: -apple-system, sans-serif;
+    color: var(--text2);
+  }
+
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 1px;
+    flex-shrink: 0;
+  }
+
+  .legend-issue {
+    width: 3px;
+    height: 14px;
+    background: var(--issue);
+    border-radius: 1px;
+    flex-shrink: 0;
+  }
+
+  /* Reset */
+  .reset-btn {
+    font-size: 11px;
+    font-family: -apple-system, sans-serif;
+    color: var(--text3);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+    margin-left: auto;
+  }
+
+  .reset-btn:hover { color: var(--text2); }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="header-top">
+      <span class="brand">Simpleness</span>
+      <span class="date" id="today"></span>
+    </div>
+    <h1>Tracking & Feed<br>Audit Checklist</h1>
+    <div class="subtitle">Generell sjekkliste for e-commerce tracking og produktfeed-oppsett</div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('tracking')">Tracking</button>
+    <button class="tab" onclick="showTab('feed')">Produktfeed</button>
+  </div>
+
+  <!-- TRACKING PANEL -->
+  <div class="panel active" id="panel-tracking">
+
+    <div class="client-row">
+      <div class="client-field">
+        <span>Kunde</span>
+        <input type="text" placeholder="Kundenavn" id="client-name">
+      </div>
+      <div class="client-field">
+        <span>Plattform</span>
+        <input type="text" placeholder="Centra, Shopify..." id="platform-name">
+      </div>
+      <button class="reset-btn" onclick="resetPanel('tracking')">Nullstill</button>
+    </div>
+
+    <div class="progress-bar-wrap"><div class="progress-bar" id="progress-tracking" style="width:0%"></div></div>
+    <div class="progress-label" id="label-tracking">0 av 0 fullført</div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--essential-bg);border:1px solid var(--essential-border)"></div> Essentials</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--important-bg);border:1px solid var(--important-border)"></div> Viktig</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--advanced-bg);border:1px solid var(--advanced-border)"></div> Avansert</div>
+      <div class="legend-item"><div class="legend-issue"></div> Kjent problem hos Alfa</div>
+    </div>
+
+    <!-- ESSENTIALS -->
+    <div class="section">
+      <div class="section-header">
+        <span class="tier-badge tier-essential">Essentials</span>
+        <span class="section-title">Datalag & event-struktur</span>
+      </div>
+      <div class="section-desc">Grunnmuren. Uten dette fungerer ingenting nedover i kjeden.</div>
+      <div class="items">
+        <div class="item alfa-issue" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">Google Enhanced Ecommerce er implementert som standard</div>
+            <div class="item-desc">Plattformen pusher standardiserte events til dataLayer: <span class="item-code">view_item</span>, <span class="item-code">add_to_cart</span>, <span class="item-code">begin_checkout</span>, <span class="item-code">purchase</span> med korrekte felter.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item alfa-issue" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">item_id i dataLayer matcher feed-ID eksakt</div>
+            <div class="item-desc">Den samme produkt-IDen brukes i dataLayer og i alle produktfeeder. Verifiser ved å sammenligne <span class="item-code">ecommerce.items[0].item_id</span> mot <span class="item-code">&lt;g:id&gt;</span> i feeden.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">GTM er installert korrekt på alle sider</div>
+            <div class="item-desc">GTM-snippet er på alle sider inkludert checkout og ordrebekreftelse. Verifiser med GTM Preview eller Tag Assistant.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item alfa-issue" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">GTM-variabler leser fra ecommerce.items (ikke egne felt)</div>
+            <div class="item-desc">Alle piksler bruker samme dataLayer-variabel som kilde. Ingen egne felt som <span class="item-code">fb_items</span> eller <span class="item-code">tiktok_items</span> — disse populeres sjelden korrekt.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item alfa-issue" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">ViewContent, AddToCart og Purchase fyrer med content_ids</div>
+            <div class="item-desc">Alle tre events sender <span class="item-code">content_ids</span>, <span class="item-code">content_type: product</span>, <span class="item-code">value</span> og <span class="item-code">currency</span>. Verifiser i Meta Pixel Helper under "Custom parameters".</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">Purchase-eventet fyrer kun én gang per ordre</div>
+            <div class="item-desc">Kjøp må ikke telles dobbelt. Sjekk ordrebekreftelsessiden og bekreft at Purchase-eventet ikke fyrer ved reload.</div>
+          </div>
+          <div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIKTIG -->
+    <div class="section">
+      <div class="section-header">
+        <span class="tier-badge tier-important">Viktig</span>
+        <span class="section-title">Server-side & deduplication</span>
+      </div>
+      <div class="section-desc">Nødvendig for pålitelig datakvalitet og GDPR-compliance.</div>
+      <div class="items">
+        <div class="item alfa-issue" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">Conversions API (CAPI) / server-side er satt opp</div>
+            <div class="item-desc">Server-side tracking via Stape.io, Elevar eller tilsvarende. Sender events direkte til Meta og Google uten avhengighet av nettleser.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item alfa-issue" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">Deduplication er korrekt satt opp</div>
+            <div class="item-desc">Browser og server sender identisk <span class="item-code">event_id</span> per event slik at Meta og Google ikke teller samme event dobbelt.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">Consent Mode v2 er implementert</div>
+            <div class="item-desc">Google Consent Mode v2 er aktiv med korrekt CMP-integrasjon. Modelerte konverteringer aktiveres for brukere uten samtykke.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">Enhanced Matching er aktivert (Meta)</div>
+            <div class="item-desc">Sender hashet e-post, telefon og navn via piksel eller CAPI for å forbedre match rate. Krever brukerens samtykke.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item alfa-issue" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">Funnel-events er komplette (AddToCart + BeginCheckout)</div>
+            <div class="item-desc">Google Ads og Meta trenger funnel-data for optimal PMax og Advantage+ optimalisering. Mangler disse fyrer algoritmen delvis blind.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item alfa-issue" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">Én piksel per katalog — ikke flere piksler på samme katalog</div>
+            <div class="item-desc">Flere piksler koblet til samme katalog splitter match rate. Én piksel per katalog. Bruk piksel-deling mellom Business Managers ved behov.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">Konverteringsverdier er faktisk kjøpsverdi</div>
+            <div class="item-desc">Verifiser at <span class="item-code">value</span> i Purchase-eventet reflekterer faktisk ordresum inkl. eventuell rabatt — ikke listepris.</div>
+          </div>
+          <div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AVANSERT -->
+    <div class="section">
+      <div class="section-header">
+        <span class="tier-badge tier-advanced">Avansert</span>
+        <span class="section-title">Optimering & fremtidssikring</span>
+      </div>
+      <div class="section-desc">Gir konkurransefortrinn og bedre algoritme-optimalisering over tid.</div>
+      <div class="items">
+        <div class="item" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">Market-parameter sendes med alle events</div>
+            <div class="item-desc">For flerspråklige butikker: send <span class="item-code">market: "NO"</span> / <span class="item-code">"SE"</span> / <span class="item-code">"INT"</span> med alle events for korrekt katalog-matching per marked.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">Variant-ID sendes ved kjøp (størrelse/farge)</div>
+            <div class="item-desc">Send variant-spesifikk ID ved AddToCart og Purchase slik at Meta og Google vet hvilken variant som faktisk ble kjøpt — ikke bare produktgruppen.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">Offline konverteringer er koblet til (CAPI for fysisk handel)</div>
+            <div class="item-desc">Relevante for brands med fysiske butikker. Kobler offline kjøp til digitale annonseklikk via ordre-ID matching.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">GTM-beholderen er dokumentert og ryddig</div>
+            <div class="item-desc">Tagger, triggere og variabler har beskrivende navn. Utdaterte tagger er arkivert. Én ansvarlig part eier GTM-kontoen.</div>
+          </div>
+          <div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FEED PANEL -->
+  <div class="panel" id="panel-feed">
+
+    <div class="client-row">
+      <div class="client-field">
+        <span>Kunde</span>
+        <input type="text" placeholder="Kundenavn">
+      </div>
+      <div class="client-field">
+        <span>Plattform</span>
+        <input type="text" placeholder="Centra, Shopify...">
+      </div>
+      <button class="reset-btn" onclick="resetPanel('feed')">Nullstill</button>
+    </div>
+
+    <div class="progress-bar-wrap"><div class="progress-bar" id="progress-feed" style="width:0%"></div></div>
+    <div class="progress-label" id="label-feed">0 av 0 fullført</div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--essential-bg);border:1px solid var(--essential-border)"></div> Essentials</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--important-bg);border:1px solid var(--important-border)"></div> Viktig</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--advanced-bg);border:1px solid var(--advanced-border)"></div> Avansert</div>
+      <div class="legend-item"><div class="legend-issue"></div> Kjent problem hos Alfa</div>
+    </div>
+
+    <!-- ESSENTIALS -->
+    <div class="section">
+      <div class="section-header">
+        <span class="tier-badge tier-essential">Essentials</span>
+        <span class="section-title">Obligatoriske felter</span>
+      </div>
+      <div class="section-desc">Må være på plass for at produkter godkjennes og annonser kan kjøres.</div>
+      <div class="items">
+        <div class="item alfa-issue" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">id matcher item_id i dataLayer eksakt</div>
+            <div class="item-desc"><span class="item-code">&lt;g:id&gt;</span> i feeden og <span class="item-code">item_id</span> fra dataLayer er identiske. Dette er den hyppigste årsaken til 0% katalog-match.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">title er beskrivende og søkevennlig</div>
+            <div class="item-desc">Inkluder: merke + produktnavn + nøkkelattributt. Maks 150 tegn. Unngå salgsfraser ("kjøp nå", "billig"). Eksempel: "Alfa Glimmer Dame Tursko GTX".</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item alfa-issue" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">description er ren tekst uten HTML eller BBcode</div>
+            <div class="item-desc">Ingen <span class="item-code">&lt;span&gt;</span>, <span class="item-code">[b]</span> eller andre formateringskoder. Ren prosa på 500–5000 tegn med naturlige søkeord.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">link peker til korrekt domene</div>
+            <div class="item-desc">Produkt-URL i feeden matcher domenet der pikselen fyrer. Mismatch mellom feed-domene og piksel-domene forhindrer katalog-matching.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">price og availability er korrekte og oppdaterte</div>
+            <div class="item-desc">Pris og lagerstatus synkroniseres jevnlig (helst < 24t). Utsolgte produkter markeres <span class="item-code">out of stock</span> umiddelbart.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">image_link er høyoppløselig produktbilde uten watermark</div>
+            <div class="item-desc">Min 800x800px, helst 1200x1200px. Hvit eller nøytral bakgrunn for Shopping-annonser. Ingen tekst-overlays eller logoer på hovedbildet.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">brand er satt korrekt</div>
+            <div class="item-desc">Merkevarenavnet er konsekvent og korrekt stavet på tvers av alle produkter. Brukes av Meta og Google til produktgraf-matching.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">condition er satt (new / used / refurbished)</div>
+            <div class="item-desc">Nesten alltid <span class="item-code">new</span> for nye produkter. Påkrevd av Google Merchant Center.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">google_product_category er korrekt (GPC-taksonomi)</div>
+            <div class="item-desc">Bruk Googles offisielle kategori-ID eller sti. For sko: <span class="item-code">Apparel & Accessories > Shoes</span>. Jo mer spesifikk, jo bedre.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item alfa-issue" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">Én feed per marked med korrekt domene og valuta</div>
+            <div class="item-desc">NO-feed bruker alfa.no-URLer og NOK. SE-feed bruker alfaoutdoor.com/sv og SEK. INT-feed bruker alfaoutdoor.com/en og EUR.</div>
+          </div>
+          <div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIKTIG -->
+    <div class="section">
+      <div class="section-header">
+        <span class="tier-badge tier-important">Viktig</span>
+        <span class="section-title">Variant-data & segmentering</span>
+      </div>
+      <div class="section-desc">Nødvendig for Dynamic Ads, Product Sets og korrekt katalog-matching på variant-nivå.</div>
+      <div class="items">
+        <div class="item alfa-issue" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">Én feed-rad per variant (størrelse × farge)</div>
+            <div class="item-desc">Hvert størrelse/farge-kombinasjon er en egen rad med unik <span class="item-code">id</span> og felles <span class="item-code">item_group_id</span>. Påkrevd for at Meta skal matche variant-spesifikke kjøp.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item alfa-issue" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">size er satt per variant</div>
+            <div class="item-desc">Størrelse i lokal standard (EU 38, UK 5 osv.). Kritisk for Dynamic Ads og for at algoritmen skal lære hvilke størrelser som selger.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item alfa-issue" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">color er satt per variant</div>
+            <div class="item-desc">Fargenavn på engelsk, enkelt og konsekvent. <span class="item-code">Black</span>, ikke <span class="item-code">Jet Black</span> eller <span class="item-code">Svart</span>.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item alfa-issue" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">gender er korrekt (male / female — ikke unisex på alt)</div>
+            <div class="item-desc">Sett <span class="item-code">male</span> eller <span class="item-code">female</span> basert på kategorien. <span class="item-code">unisex</span> kun der det faktisk er relevant. Feil gender svekker Advantage+ targeting.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">sale_price og sale_price_effective_date er korrekte</div>
+            <div class="item-desc">Salgspris og gyldighetsperiode er satt korrekt. Meta og Google viser automatisk "salg"-badge og streket-over-pris når dette er på plass.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item alfa-issue" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">gtin (EAN/barcode) er satt på alle produkter</div>
+            <div class="item-desc">GTIN er den viktigste identifikatoren for produktgraf-matching på tvers av plattformer. Uten GTIN mister produktene ekstra optimaliseringssignaler.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">product_type er strukturert og konsekvent</div>
+            <div class="item-desc">Egendefinert kategorisering for Product Sets. Bruk hierarkisk format: <span class="item-code">Herre > Fjellsko</span>. Konsekvent på tvers av alle produkter.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">custom_label_0–4 er definert for kampanje-segmentering</div>
+            <div class="item-desc">Bruk custom labels for intern segmentering: sesong, priskategori, margin, kampanje, bestselger. Disse er usynlige for kjøper men kraftige for kampanjestruktur.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">Minst 4 additional_image_link per produkt</div>
+            <div class="item-desc">Livsstilsbilder, detaljbilder og bilde fra ulike vinkler. Brukes i karusellannonser og Advantage+ katalog-annonser automatisk.</div>
+          </div>
+          <div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AVANSERT -->
+    <div class="section">
+      <div class="section-header">
+        <span class="tier-badge tier-advanced">Avansert</span>
+        <span class="section-title">AI-søk, dynamic media & fremtidssikring</span>
+      </div>
+      <div class="section-desc">Gir synlighet i AI-søk, bedre Dynamic Ads-ytelse og konkurransefortrinn fremover.</div>
+      <div class="items">
+        <div class="item" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">video_link er satt per produkt (Meta Advantage+)</div>
+            <div class="item-desc">Produkt-nivå video (15–30 sek) brukes automatisk av Meta Advantage+ katalog-annonser. Gir signifikant høyere engagement enn stillbilder. MP4, min 1:1 ratio.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">description inneholder kontekstuell og bruksrelatert tekst</div>
+            <div class="item-desc">For AI-søk (Google SGE, ChatGPT Shopping): beskriv bruksområde, målgruppe og situasjon — ikke bare tekniske specs. Naturlig språk som matcher brukerens søkeintensjon.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">product_highlight er satt (Google)</div>
+            <div class="item-desc">Punktliste med 2–10 nøkkelfordeler. Vises i Google Shopping og AI-søk som strukturerte punkter. Øker synlighet i SGE-resultater.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">product_detail er satt for tekniske spesifikasjoner</div>
+            <div class="item-desc">Strukturerte attributter som <span class="item-code">Materiale: GORE-TEX</span>, <span class="item-code">Såle: Vibram</span>. Google bruker dette i rike produktkort og AI-sammenstillinger.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">shipping og shipping_weight er korrekt utfylt</div>
+            <div class="item-desc">Google bruker fraktdata til å beregne totalpris i Shopping-annonser. Ufullstendig fraktinfo kan ekskludere produkter fra visse markeder og AI-søkeresultater.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">ar_media / 3D-modell er tilgjengelig (Meta AR)</div>
+            <div class="item-desc">Meta støtter AR-prøving i annonser for relevante kategorier (sko, briller, klær). <span class="item-code">.glb</span> eller <span class="item-code">.usdz</span> format. Tidlig adopsjon gir konkurransefortrinn.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">Feed oppdateres minimum daglig (helst via scheduled fetch)</div>
+            <div class="item-desc">Utdatert lagerstatus og priser er en av de vanligste årsaker til avviste produkter. Google og Meta anbefaler oppdatering minst én gang per dag.</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="item" onclick="toggle(this)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="item-body">
+            <div class="item-title">loyalty_points / return_policy er satt (Google)</div>
+            <div class="item-desc">Google viser returpolitikk og lojalitetsprogram direkte i Shopping-annonser. Øker konverteringsrate og gir bedre placement i AI-søk-sammenstillinger.</div>
+          </div>
+          <div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  // Date
+  document.getElementById('today').textContent = new Date().toLocaleDateString('no-NO', { day: 'numeric', month: 'long', year: 'numeric' });
+
+  function toggle(el) {
+    el.classList.toggle('checked');
+    updateProgress();
+  }
+
+  function showTab(name) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelector(`[onclick="showTab('${name}')"]`).classList.add('active');
+    document.getElementById(`panel-${name}`).classList.add('active');
+    updateProgress();
+  }
+
+  function updateProgress() {
+    ['tracking', 'feed'].forEach(panel => {
+      const p = document.getElementById(`panel-${panel}`);
+      if (!p) return;
+      const items = p.querySelectorAll('.item');
+      const checked = p.querySelectorAll('.item.checked');
+      const pct = items.length ? Math.round(checked.length / items.length * 100) : 0;
+      const bar = document.getElementById(`progress-${panel}`);
+      const label = document.getElementById(`label-${panel}`);
+      if (bar) bar.style.width = pct + '%';
+      if (label) label.textContent = `${checked.length} av ${items.length} fullført`;
+    });
+  }
+
+  function resetPanel(panel) {
+    const p = document.getElementById(`panel-${panel}`);
+    p.querySelectorAll('.item.checked').forEach(i => i.classList.remove('checked'));
+    updateProgress();
+  }
+
+  updateProgress();
+</script>
+</body>
+</html>
