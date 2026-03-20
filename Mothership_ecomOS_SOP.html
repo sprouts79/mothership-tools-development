@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ecomOS — Intern SOP</title>
+<style>
+  :root {
+    --bg: #f5f4f0;
+    --surface: #ffffff;
+    --surface2: #f0ede8;
+    --border: #e2dfd8;
+    --text: #1c1c1a;
+    --text2: #6b6a65;
+    --text3: #9e9c96;
+    --essential: #c8401a;
+    --essential-bg: #fdf0ec;
+    --essential-border: #f5c4b4;
+    --important: #9a6c00;
+    --important-bg: #fdf7e8;
+    --important-border: #f0d890;
+    --green: #2a6b4a;
+    --green-bg: #edf7f2;
+    --green-border: #b4dfc8;
+    --blue: #2c4db5;
+    --blue-bg: #f0f4ff;
+    --blue-border: #c5d0f5;
+    --purple: #5b3fa6;
+    --purple-bg: #f2effe;
+    --purple-border: #cfc0f5;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Georgia', serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  .page { max-width: 860px; margin: 0 auto; padding: 48px 32px 80px; }
+
+  /* Header */
+  .header { margin-bottom: 40px; border-bottom: 2px solid var(--text); padding-bottom: 24px; }
+  .header-top { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
+  .brand { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text3); font-family: -apple-system, sans-serif; }
+  .tag { font-size: 11px; font-family: -apple-system, sans-serif; background: var(--surface2); color: var(--text3); padding: 2px 8px; border-radius: 2px; }
+  h1 { font-size: 32px; font-weight: normal; letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 8px; }
+  .subtitle { font-size: 14px; color: var(--text2); font-family: -apple-system, sans-serif; font-style: italic; }
+
+  /* Tabs */
+  .tabs { display: flex; margin-bottom: 40px; border-bottom: 1px solid var(--border); gap: 0; overflow-x: auto; }
+  .tab { padding: 12px 18px; font-size: 13px; font-family: -apple-system, sans-serif; font-weight: 500; cursor: pointer; border: none; background: none; color: var(--text2); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; white-space: nowrap; }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--text); border-bottom-color: var(--text); }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* Section */
+  .section { margin-bottom: 36px; }
+  .section-label { font-size: 11px; font-family: -apple-system, sans-serif; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+
+  /* Step cards */
+  .step { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 8px; }
+  .step-header { display: grid; grid-template-columns: 36px 1fr auto; gap: 12px; align-items: center; padding: 14px 16px; cursor: pointer; }
+  .step-header:hover { background: #fafaf8; border-radius: 10px; }
+  .step.open .step-header { background: #fafaf8; border-radius: 10px 10px 0 0; }
+  .step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--text); color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-family: -apple-system, sans-serif; font-weight: 600; flex-shrink: 0; }
+  .step-title { font-size: 14px; font-family: -apple-system, sans-serif; font-weight: 500; }
+  .step-meta { font-size: 11px; font-family: -apple-system, sans-serif; color: var(--text3); white-space: nowrap; }
+  .step-body { padding: 0 16px 16px 64px; display: none; }
+  .step.open .step-body { display: block; }
+
+  /* Owner badge */
+  .owner { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-family: -apple-system, sans-serif; font-weight: 600; padding: 2px 8px; border-radius: 20px; margin-bottom: 12px; }
+  .owner-simpleness { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue-border); }
+  .owner-kunde { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+  .owner-utvikler { background: var(--purple-bg); color: var(--purple); border: 1px solid var(--purple-border); }
+  .owner-claude { background: var(--essential-bg); color: var(--essential); border: 1px solid var(--essential-border); }
+
+  /* Content blocks */
+  .desc { font-size: 13px; font-family: -apple-system, sans-serif; color: var(--text2); line-height: 1.7; margin-bottom: 14px; }
+  .access-list { margin-bottom: 14px; }
+  .access-label { font-size: 10px; font-family: -apple-system, sans-serif; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); margin-bottom: 6px; }
+  .access-item { display: flex; align-items: start; gap: 8px; font-size: 12px; font-family: -apple-system, sans-serif; color: var(--text2); line-height: 1.55; margin-bottom: 4px; }
+  .access-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--text3); flex-shrink: 0; margin-top: 5px; }
+
+  /* Steps list */
+  .steps { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+  .step-item { display: grid; grid-template-columns: 22px 1fr; gap: 10px; align-items: start; }
+  .step-item-num { width: 22px; height: 22px; border-radius: 50%; background: var(--surface2); color: var(--text2); display: flex; align-items: center; justify-content: center; font-size: 11px; font-family: -apple-system, sans-serif; font-weight: 600; flex-shrink: 0; margin-top: 1px; }
+  .step-item-text { font-size: 12px; font-family: -apple-system, sans-serif; color: var(--text); line-height: 1.65; }
+
+  /* Claude prompt box */
+  .claude-box { background: var(--essential-bg); border: 1px solid var(--essential-border); border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; }
+  .claude-label { font-size: 10px; font-family: -apple-system, sans-serif; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--essential); margin-bottom: 8px; }
+  .claude-prompt { font-size: 12px; font-family: -apple-system, sans-serif; color: var(--text); line-height: 1.7; }
+  .claude-files { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .claude-file { font-size: 11px; font-family: -apple-system, sans-serif; background: var(--surface); border: 1px solid var(--essential-border); color: var(--essential); padding: 2px 8px; border-radius: 4px; }
+
+  /* Output box */
+  .output-box { background: var(--green-bg); border: 1px solid var(--green-border); border-radius: 8px; padding: 12px 16px; margin-bottom: 12px; }
+  .output-label { font-size: 10px; font-family: -apple-system, sans-serif; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green); margin-bottom: 6px; }
+  .output-text { font-size: 12px; font-family: -apple-system, sans-serif; color: var(--text2); line-height: 1.65; }
+
+  /* Note box */
+  .note { background: var(--important-bg); border: 1px solid var(--important-border); border-radius: 8px; padding: 12px 16px; margin-bottom: 12px; font-size: 12px; font-family: -apple-system, sans-serif; color: var(--text2); line-height: 1.65; }
+  .note strong { color: var(--important); font-weight: 600; }
+
+  code { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 11px; background: var(--surface2); padding: 1px 5px; border-radius: 3px; }
+
+  /* Tools grid */
+  .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; margin-bottom: 14px; }
+  .tool-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
+  .tool-name { font-size: 13px; font-family: -apple-system, sans-serif; font-weight: 500; margin-bottom: 3px; }
+  .tool-desc { font-size: 11px; font-family: -apple-system, sans-serif; color: var(--text3); line-height: 1.5; }
+
+  /* Divider */
+  hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+  /* Summary table */
+  .summary-table { width: 100%; border-collapse: collapse; font-size: 12px; font-family: -apple-system, sans-serif; margin-bottom: 16px; }
+  .summary-table th { text-align: left; font-weight: 600; padding: 8px 12px; background: var(--surface2); color: var(--text2); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+  .summary-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; color: var(--text2); line-height: 1.55; }
+  .summary-table tr:last-child td { border-bottom: none; }
+  .summary-table td:first-child { font-weight: 500; color: var(--text); white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="header-top">
+      <span class="brand">Mothership</span>
+      <span class="tag">Intern — ikke del med kunder</span>
+    </div>
+    <h1>ecomOS Audit<br>Standard Operating Procedure</h1>
+    <div class="subtitle">Fremgangsmåte for tracking- og feed-audit — fra første klientmøte til ferdig rapport</div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('overview')">Oversikt</button>
+    <button class="tab" onclick="showTab('access')">Tilganger</button>
+    <button class="tab" onclick="showTab('tracking')">Tracking-audit</button>
+    <button class="tab" onclick="showTab('feed')">Feed-audit</button>
+    <button class="tab" onclick="showTab('claude')">Claude-arbeidsflyt</button>
+    <button class="tab" onclick="showTab('output')">Leveranse</button>
+  </div>
+
+  <!-- OVERSIKT -->
+  <div class="panel active" id="panel-overview">
+
+    <div class="section">
+      <div class="section-label">Hva dette er</div>
+      <div class="desc">
+        ecomOS-auditen kartlegger om tracking og produktfeeder er korrekt satt opp for Meta, Google og Snap. Målet er å avdekke rot-årsaker til dårlig katalog-match, manglende konverteringssignaler og suboptimal algoritme-optimalisering — og levere en konkret tiltaksliste med ansvarlig part per punkt.
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Prosessflyt</div>
+      <div class="steps">
+        <div class="step-item"><div class="step-item-num">1</div><div class="step-item-text"><strong>Samle tilganger</strong> — se tilgangslisten i neste fane. Alt må være på plass før audit starter.</div></div>
+        <div class="step-item"><div class="step-item-num">2</div><div class="step-item-text"><strong>Send feed til Claude</strong> — last opp XML/CSV-feed og følg Claude-arbeidsflyten for automatisk analyse.</div></div>
+        <div class="step-item"><div class="step-item-num">3</div><div class="step-item-text"><strong>Tracking-audit manuelt</strong> — bruk GTM Preview, Pixel Helper og Events Manager til å verifisere events, content_ids og deduplication.</div></div>
+        <div class="step-item"><div class="step-item-num">4</div><div class="step-item-text"><strong>Fylle ut sjekklisten</strong> — bruk <code>ecomOS_checklist</code> og huk av det som er OK. Resten genereres automatisk som tiltaksliste.</div></div>
+        <div class="step-item"><div class="step-item-num">5</div><div class="step-item-text"><strong>Leveranse</strong> — tiltaksliste til kunden, teknisk brief til plattformutvikler, notat til mediebyråer.</div></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Tidsestimat</div>
+      <table class="summary-table">
+        <tr><th>Aktivitet</th><th>Tid</th><th>Hvem</th></tr>
+        <tr><td>Samle tilganger fra kunde</td><td>1–2 dager (venting)</td><td>Kunde + Simpleness</td></tr>
+        <tr><td>Feed-analyse med Claude</td><td>30–60 min</td><td>Simpleness</td></tr>
+        <tr><td>Tracking-audit manuelt</td><td>60–90 min</td><td>Simpleness</td></tr>
+        <tr><td>Fylle ut sjekkliste + tiltaksliste</td><td>30 min</td><td>Simpleness</td></tr>
+        <tr><td>Leveransedokumenter</td><td>30 min</td><td>Simpleness + Claude</td></tr>
+        <tr><td><strong>Total (ekskl. venting)</strong></td><td><strong>3–4 timer</strong></td><td></td></tr>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Dokumenter i dette settet</div>
+      <table class="summary-table">
+        <tr><th>Dokument</th><th>Formål</th><th>Mottaker</th></tr>
+        <tr><td>ecomOS_SOP (dette)</td><td>Intern fremgangsmåte</td><td>Simpleness internt</td></tr>
+        <tr><td>ecomOS_checklist</td><td>Audit-sjekkliste med tiltaksliste</td><td>Simpleness + kunden</td></tr>
+        <tr><td>ecomOS_feed_referanse</td><td>Riktig vs. feil feed-eksempler</td><td>Plattformutvikler</td></tr>
+        <tr><td>Teknisk brief (genereres per kunde)</td><td>Konkrete endringer som må gjøres</td><td>Plattformutvikler</td></tr>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- TILGANGER -->
+  <div class="panel" id="panel-access">
+
+    <div class="section">
+      <div class="section-label">Be om disse tilgangene før audit starter</div>
+      <div class="desc">Send kunden en samlet liste — ikke spør om én om gangen. Alle tilganger på denne listen er nødvendige for å fullføre auditen.</div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Fra kunden direkte</div>
+
+      <div class="step">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">1</div>
+          <div class="step-title">Produktfeed-URL(er)</div>
+          <div class="step-meta">Last ned / del lenke</div>
+        </div>
+        <div class="step-body">
+          <span class="owner owner-kunde">Kunden sender</span>
+          <div class="desc">URL til XML- eller CSV-feed for alle aktive markeder (NO, SE, INT). Alternativt: last ned feed-filen og del den direkte.<br><br>Hva vi ser etter: ID-format, manglende felter, BBcode i descriptions, variant-struktur, gender-setting.</div>
+          <div class="access-label">Spør om</div>
+          <div class="access-list">
+            <div class="access-item"><div class="access-dot"></div>Feed-URL per marked, eller direktenedlasting av XML/CSV</div>
+            <div class="access-item"><div class="access-dot"></div>Hvilken plattform genererer feeden (Centra, Shopify, WooCommerce...)</div>
+            <div class="access-item"><div class="access-dot"></div>Kontaktperson hos plattformutvikler</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">2</div>
+          <div class="step-title">GTM-tilgang (rediger)</div>
+          <div class="step-meta">Google Tag Manager</div>
+        </div>
+        <div class="step-body">
+          <span class="owner owner-kunde">Kunden inviterer</span>
+          <div class="desc">Redigeringstilgang til GTM-beholderen som er installert på nettbutikken. Nødvendig for å se tags, triggers og variabler — og evt. fikse mapping.</div>
+          <div class="access-label">Spør om</div>
+          <div class="access-list">
+            <div class="access-item"><div class="access-dot"></div>Inviter <code>din@simpleness.no</code> som redigerer i GTM</div>
+            <div class="access-item"><div class="access-dot"></div>Bekreft GTM container-ID (format: GTM-XXXXXXX)</div>
+          </div>
+          <div class="note"><strong>Obs:</strong> Hvis kunden ikke har GTM installert, er pikselen sannsynligvis hardkodet i plattformen. Sjekk Pixel Helper for å bekrefte.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">3</div>
+          <div class="step-title">Meta Business Manager-tilgang</div>
+          <div class="step-meta">Events Manager + Commerce Manager</div>
+        </div>
+        <div class="step-body">
+          <span class="owner owner-kunde">Kunden inviterer</span>
+          <div class="desc">Tilgang til Events Manager (for piksel og CAPI) og Commerce Manager (for katalog og feed). Trenger minimum analyst-tilgang.</div>
+          <div class="access-label">Spør om</div>
+          <div class="access-list">
+            <div class="access-item"><div class="access-dot"></div>Inviter til Business Manager som partner, eller gi direkte tilgang til relevant katalog og piksel</div>
+            <div class="access-item"><div class="access-dot"></div>Bekreft piksel-ID(er) og hvilken BM de tilhører</div>
+            <div class="access-item"><div class="access-dot"></div>Bekreft om de bruker CAPI (og via hvilken tjeneste — Stape, Elevar, direkte)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">4</div>
+          <div class="step-title">Google Merchant Center + Google Ads</div>
+          <div class="step-meta">GMC + Ads</div>
+        </div>
+        <div class="step-body">
+          <span class="owner owner-kunde">Kunden inviterer</span>
+          <div class="desc">Tilgang til Merchant Center for feed-diagnostikk og produktstatus. Google Ads for konverteringsoppsett og PMax produktrapporter.</div>
+          <div class="access-list">
+            <div class="access-item"><div class="access-dot"></div>Inviter til Merchant Center som standard-bruker</div>
+            <div class="access-item"><div class="access-dot"></div>Inviter til Google Ads som standard-bruker eller administrator</div>
+            <div class="access-item"><div class="access-dot"></div>Bekreft om det finnes flere Merchant Center-kontoer (per marked)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">5</div>
+          <div class="step-title">Stape.io (eller tilsvarende CAPI-løsning)</div>
+          <div class="step-meta">Server-side tracking</div>
+        </div>
+        <div class="step-body">
+          <span class="owner owner-kunde">Kunden inviterer</span>
+          <div class="desc">Nødvendig for å verifisere at server-side events sender korrekte content_ids og at deduplication med browser-piksel fungerer.</div>
+          <div class="access-list">
+            <div class="access-item"><div class="access-dot"></div>Inviter til Stape.io workspace</div>
+            <div class="access-item"><div class="access-dot"></div>Alternativt: skjermbilde av innkommende events fra Events Manager → Test Events</div>
+          </div>
+          <div class="note"><strong>Obs:</strong> Hvis kunden ikke har CAPI satt opp, noteres dette som et Viktig-punkt i sjekklisten.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section">
+      <div class="section-label">Verktøy vi setter opp selv (Chrome extensions)</div>
+
+      <div class="tools-grid">
+        <div class="tool-card">
+          <div class="tool-name">Meta Pixel Helper</div>
+          <div class="tool-desc">Chrome extension. Viser events, content_ids og EMQ på alle sider. Gratis.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-name">Google Tag Assistant</div>
+          <div class="tool-desc">Chrome extension. Verifiserer GTM og Google-tagger på alle sider. Gratis.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-name">Snap Pixel Helper</div>
+          <div class="tool-desc">Chrome extension. Tilsvarende Pixel Helper for Snap-pikselen. Gratis.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-name">GTM Preview</div>
+          <div class="tool-desc">Innebygd i GTM. Viser events, dataLayer-innhold og variabelverdier i sanntid.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Nyttig å vite om kunden på forhånd</div>
+      <div class="steps">
+        <div class="step-item"><div class="access-dot" style="margin-top:6px;background:var(--text3)"></div><div class="step-item-text">Hvilken e-handelsplattform (Centra, Shopify, WooCommerce, Magento)?</div></div>
+        <div class="step-item"><div class="access-dot" style="margin-top:6px;background:var(--text3)"></div><div class="step-item-text">Antall aktive markeder og domener (NO, SE, INT osv.)?</div></div>
+        <div class="step-item"><div class="access-dot" style="margin-top:6px;background:var(--text3)"></div><div class="step-item-text">Antall aktive Business Managers og Merchant Center-kontoer?</div></div>
+        <div class="step-item"><div class="access-dot" style="margin-top:6px;background:var(--text3)"></div><div class="step-item-text">Bruker de én felles piksel eller separate per marked?</div></div>
+        <div class="step-item"><div class="access-dot" style="margin-top:6px;background:var(--text3)"></div><div class="step-item-text">Har de et eksisterende mediebyråforhold for Google og/eller Meta?</div></div>
+        <div class="step-item"><div class="access-dot" style="margin-top:6px;background:var(--text3)"></div><div class="step-item-text">Er pikselen/GTM satt opp av plattformutvikler eller et annet byrå?</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TRACKING AUDIT -->
+  <div class="panel" id="panel-tracking">
+
+    <div class="section">
+      <div class="section-label">Fremgangsmåte — steg for steg</div>
+
+      <div class="step">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">1</div>
+          <div class="step-title">Verifiser GTM-installasjon</div>
+          <div class="step-meta">5 min</div>
+        </div>
+        <div class="step-body">
+          <span class="owner owner-simpleness">Simpleness</span>
+          <div class="steps">
+            <div class="step-item"><div class="step-item-num">1</div><div class="step-item-text">Åpne nettbutikken i Chrome med Tag Assistant aktivert</div></div>
+            <div class="step-item"><div class="step-item-num">2</div><div class="step-item-text">Bekreft at GTM container-ID vises på forsiden, en produktside og ordrebekreftelse</div></div>
+            <div class="step-item"><div class="step-item-num">3</div><div class="step-item-text">Sjekk om pikselen er installert via GTM eller hardkodet (se "Setup method" i Pixel Helper)</div></div>
+          </div>
+          <div class="note"><strong>Hvis "Setup method: Manual":</strong> Pikselen er sannsynligvis hardkodet i plattformen. Kontakt plattformutvikler for å flytte den til GTM.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">2</div>
+          <div class="step-title">Sjekk dataLayer — hva sender plattformen?</div>
+          <div class="step-meta">15 min</div>
+        </div>
+        <div class="step-body">
+          <span class="owner owner-simpleness">Simpleness</span>
+          <div class="steps">
+            <div class="step-item"><div class="step-item-num">1</div><div class="step-item-text">Åpne GTM → Se forhåndsvisning → skriv inn nettbutikkens URL</div></div>
+            <div class="step-item"><div class="step-item-num">2</div><div class="step-item-text">Gå til produktside, legg i handlekurv, start checkout — noter hvilke events som fyrer</div></div>
+            <div class="step-item"><div class="step-item-num">3</div><div class="step-item-text">Klikk på <code>view_item</code> → Datalag-fanen → noter <code>ecommerce.items[0].item_id</code></div></div>
+            <div class="step-item"><div class="step-item-num">4</div><div class="step-item-text">Sjekk at alle fire events finnes: <code>view_item</code>, <code>add_to_cart</code>, <code>begin_checkout</code>, <code>purchase</code></div></div>
+          </div>
+          <div class="claude-box">
+            <div class="claude-label">📋 Noter og ta med til Claude</div>
+            <div class="claude-prompt">
+              • <code>item_id</code>-verdien fra dataLayer (f.eks. <code>6979088000</code>)<br>
+              • Hvilke events som mangler<br>
+              • Om <code>fb_items</code> eller andre egne felt brukes i stedet for <code>ecommerce.items</code>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">3</div>
+          <div class="step-title">Verifiser Meta-piksel med Pixel Helper</div>
+          <div class="step-meta">15 min</div>
+        </div>
+        <div class="step-body">
+          <span class="owner owner-simpleness">Simpleness</span>
+          <div class="steps">
+            <div class="step-item"><div class="step-item-num">1</div><div class="step-item-text">Aksepter marketing-cookies på nettbutikken</div></div>
+            <div class="step-item"><div class="step-item-num">2</div><div class="step-item-text">Produktside → Pixel Helper → klikk ViewContent → se etter <code>content_ids</code> under "Custom parameters"</div></div>
+            <div class="step-item"><div class="step-item-num">3</div><div class="step-item-text">Legg i handlekurv → sjekk AddToCart på samme måte</div></div>
+            <div class="step-item"><div class="step-item-num">4</div><div class="step-item-text">Sjekk om events fyrer dobbelt (advarsel i Pixel Helper)</div></div>
+          </div>
+          <div class="note"><strong>Mangler content_ids:</strong> Gå inn i GTM → finn Meta ViewContent-taggen → sjekk hvilken dataLayer-variabel den leser fra. Sannsynligvis peker den på et tomt felt (som <code>fb_items</code>) i stedet for <code>ecommerce.items</code>.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">4</div>
+          <div class="step-title">Sjekk Meta Events Manager</div>
+          <div class="step-meta">10 min</div>
+        </div>
+        <div class="step-body">
+          <span class="owner owner-simpleness">Simpleness</span>
+          <div class="steps">
+            <div class="step-item"><div class="step-item-num">1</div><div class="step-item-text">Events Manager → velg pikselen → sjekk Event Match Quality (EMQ) på Purchase</div></div>
+            <div class="step-item"><div class="step-item-num">2</div><div class="step-item-text">Katalog → Settings → Event Sources: tell antall piksler koblet til katalogen</div></div>
+            <div class="step-item"><div class="step-item-num">3</div><div class="step-item-text">Sjekk katalog-match rate under "Events" — se etter "Product purchases: Missing"</div></div>
+          </div>
+          <div class="claude-box">
+            <div class="claude-label">📋 Noter og ta med til Claude</div>
+            <div class="claude-prompt">
+              • EMQ-score<br>
+              • Antall piksler koblet til katalogen<br>
+              • Katalog-match rate % for ViewContent, AddToCart, Purchase<br>
+              • Skjermbilde av Events Manager-oversikten
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">5</div>
+          <div class="step-title">Sjekk Google Ads konverteringer</div>
+          <div class="step-meta">10 min</div>
+        </div>
+        <div class="step-body">
+          <span class="owner owner-simpleness">Simpleness</span>
+          <div class="steps">
+            <div class="step-item"><div class="step-item-num">1</div><div class="step-item-text">Google Ads → Mål → Konverteringer → Sammendrag</div></div>
+            <div class="step-item"><div class="step-item-num">2</div><div class="step-item-text">Sjekk at AddToCart og BeginCheckout har faktiske konverteringer (ikke 0)</div></div>
+            <div class="step-item"><div class="step-item-num">3</div><div class="step-item-text">PMax-kampanje → Produkter/Oppføringer → sjekk om enkeltprodukter har konverteringsdata</div></div>
+          </div>
+          <div class="note"><strong>Konverteringer er 0 for funnel-events:</strong> PMax og Smart Bidding mangler signal — algoritmen optimaliserer kun på Purchase, ikke på hele kjøpsreisen.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">6</div>
+          <div class="step-title">Verifiser deduplication (CAPI)</div>
+          <div class="step-meta">10 min</div>
+        </div>
+        <div class="step-body">
+          <span class="owner owner-simpleness">Simpleness</span>
+          <div class="steps">
+            <div class="step-item"><div class="step-item-num">1</div><div class="step-item-text">Meta Events Manager → Test Events → gjennomfør en ViewContent på nettbutikken</div></div>
+            <div class="step-item"><div class="step-item-num">2</div><div class="step-item-text">Sjekk at eventet vises én gang — ikke to</div></div>
+            <div class="step-item"><div class="step-item-num">3</div><div class="step-item-text">I Stape.io: sjekk at <code>event_id</code> i innkommende events er identisk med browser-pikselens <code>event_id</code></div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- FEED AUDIT -->
+  <div class="panel" id="panel-feed">
+
+    <div class="section">
+      <div class="section-label">Fremgangsmåte — steg for steg</div>
+
+      <div class="step">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">1</div>
+          <div class="step-title">Last ned og åpne feed-filen</div>
+          <div class="step-meta">5 min</div>
+        </div>
+        <div class="step-body">
+          <span class="owner owner-simpleness">Simpleness</span>
+          <div class="steps">
+            <div class="step-item"><div class="step-item-num">1</div><div class="step-item-text">Åpne feed-URL i nettleser og lagre som XML/CSV, eller motta filen direkte fra kunden</div></div>
+            <div class="step-item"><div class="step-item-num">2</div><div class="step-item-text">Åpne i en teksteditor (VS Code, Sublime) for å søke i innholdet</div></div>
+            <div class="step-item"><div class="step-item-num">3</div><div class="step-item-text">Tell antall <code>&lt;item&gt;</code>-tagger for å vite størrelsen på feeden</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">2</div>
+          <div class="step-title">Send feed til Claude for analyse</div>
+          <div class="step-meta">30 min (Claude gjør jobben)</div>
+        </div>
+        <div class="step-body">
+          <span class="owner owner-claude">Claude gjør dette</span>
+          <div class="desc">Last opp feed-filen til Claude og bruk prompten under. Claude analyserer struktur, manglende felter, ID-format, BBcode og andre problemer automatisk.</div>
+          <div class="claude-box">
+            <div class="claude-label">Claude-prompt — feed-analyse</div>
+            <div class="claude-prompt">
+              Du er ekspert på produktfeeder for Meta, Google og Snap.<br><br>
+              Analyser denne feeden og gi meg:<br>
+              1. Totalt antall produkter og varianter<br>
+              2. Hvilke obligatoriske felt som mangler (id, title, description, link, price, availability, brand, condition, gtin)<br>
+              3. Om description inneholder HTML eller BBcode<br>
+              4. Om size og color er satt per variant<br>
+              5. Om gender er satt korrekt (ikke unisex på alt)<br>
+              6. Om item_group_id og variant-struktur er korrekt<br>
+              7. Om custom_labels er populert<br>
+              8. Om sale_price er korrekt implementert<br>
+              9. Hvilken ID-format som brukes i id-feltet<br>
+              10. Om alle link-URLer bruker samme domene<br><br>
+              Vis funnene strukturert med antall berørte produkter per problem. Marker kritiske funn tydelig.
+            </div>
+            <div class="claude-files">
+              <span class="claude-file">feed.xml eller feed.csv</span>
+            </div>
+          </div>
+          <div class="output-box">
+            <div class="output-label">Forventet output fra Claude</div>
+            <div class="output-text">Strukturert oversikt over alle feed-problemer med antall berørte produkter, prioritert etter alvorlighetsgrad. Brukes direkte til å fylle ut sjekklisten.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">3</div>
+          <div class="step-title">Sammenlign feed-ID mot dataLayer</div>
+          <div class="step-meta">10 min</div>
+        </div>
+        <div class="step-body">
+          <span class="owner owner-simpleness">Simpleness</span>
+          <div class="steps">
+            <div class="step-item"><div class="step-item-num">1</div><div class="step-item-text">Fra tracking-audit: noter <code>item_id</code> fra dataLayer (f.eks. <code>6979088000</code>)</div></div>
+            <div class="step-item"><div class="step-item-num">2</div><div class="step-item-text">Søk etter samme produkt i feeden — noter <code>&lt;g:id&gt;</code>-verdien</div></div>
+            <div class="step-item"><div class="step-item-num">3</div><div class="step-item-text">Sammenlign: må være identiske. Hvis ikke — dette er rot-årsaken til 0% katalog-match</div></div>
+          </div>
+          <div class="note"><strong>ID-mismatch er den vanligste enkeltfeilen</strong> vi finner. Notér begge formater og ta med til leveransedokumentet.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">4</div>
+          <div class="step-title">Sjekk Merchant Center og Commerce Manager</div>
+          <div class="step-meta">15 min</div>
+        </div>
+        <div class="step-body">
+          <span class="owner owner-simpleness">Simpleness</span>
+          <div class="steps">
+            <div class="step-item"><div class="step-item-num">1</div><div class="step-item-text">GMC: Products → Needs attention — noter antall avviste og "Limited" produkter</div></div>
+            <div class="step-item"><div class="step-item-num">2</div><div class="step-item-text">GMC: klikk på ett produkt → noter produkt-ID-format (matcher det dataLayer?)</div></div>
+            <div class="step-item"><div class="step-item-num">3</div><div class="step-item-text">Meta Commerce Manager: Katalog → Diagnostics → sjekk kjente feil</div></div>
+            <div class="step-item"><div class="step-item-num">4</div><div class="step-item-text">Meta: Katalog → Settings → Event Sources — tell antall piksler koblet til</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- CLAUDE-ARBEIDSFLYT -->
+  <div class="panel" id="panel-claude">
+
+    <div class="section">
+      <div class="section-label">Hva er en Claude-skill?</div>
+      <div class="desc">
+        En <strong>skill</strong> er en instruksjonsfil som forteller Claude nøyaktig hvordan den skal utføre en bestemt oppgave — hvilke felter den skal se etter, hvordan den skal prioritere funn og hva outputen skal inneholde. Skills gjør at Claude konsekvent leverer samme kvalitet uavhengig av hvem som kjører analysen.<br><br>
+        Vi har ikke satt opp en egen skill for ecomOS-auditen ennå — det er neste steg. Inntil da brukes promptene i denne SOPen manuelt.
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Claude-prompts som brukes i denne auditen</div>
+
+      <div class="step">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">1</div>
+          <div class="step-title">Feed-analyse</div>
+          <div class="step-meta">Last opp feed-fil</div>
+        </div>
+        <div class="step-body">
+          <div class="claude-box">
+            <div class="claude-label">Prompt</div>
+            <div class="claude-prompt">
+              Du er ekspert på produktfeeder for Meta, Google og Snap. Analyser denne feeden og gi meg en strukturert oversikt over alle problemer — prioritert etter kritisk → viktig → forbedring. Vis antall berørte produkter per problem. Se spesielt etter: ID-format, manglende felter (size, color, gender, gtin, custom_labels), BBcode/HTML i descriptions, variant-struktur, domene-konsistens og sale_price-implementasjon.
+            </div>
+            <div class="claude-files">
+              <span class="claude-file">feed.xml</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">2</div>
+          <div class="step-title">Sammenstill funn og lag tiltaksliste</div>
+          <div class="step-meta">Etter tracking + feed er ferdig</div>
+        </div>
+        <div class="step-body">
+          <div class="claude-box">
+            <div class="claude-label">Prompt</div>
+            <div class="claude-prompt">
+              Basert på disse funnene fra tracking-audit og feed-analyse — lag en prioritert tiltaksliste for kunden [kundenavn]. Del opp etter ansvarlig part: plattformutvikler, Simpleness (GTM), og kunden selv. Marker rot-årsaker tydelig. Begrunn hver anbefaling kort.
+            </div>
+            <div class="claude-files">
+              <span class="claude-file">Lim inn funn fra tracking-audit</span>
+              <span class="claude-file">Lim inn funn fra feed-analyse</span>
+              <span class="claude-file">Skjermbilder fra Events Manager</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">3</div>
+          <div class="step-title">Generer teknisk brief til plattformutvikler</div>
+          <div class="step-meta">Sendes til try.no / Centra / Shopify-partner</div>
+        </div>
+        <div class="step-body">
+          <div class="claude-box">
+            <div class="claude-label">Prompt</div>
+            <div class="claude-prompt">
+              Skriv en teknisk brief til [plattformutvikler] med konkrete endringer som må gjøres. Funnene er: [lim inn funn]. Beskriv nøyaktig hva som skal endres, hvorfor, og hva korrekt verdi skal være. Bruk et presist men ikke-aggressivt språk. Inkluder kode-eksempler der det er relevant.
+            </div>
+            <div class="claude-files">
+              <span class="claude-file">Funn fra feed-analyse</span>
+              <span class="claude-file">feed_referanse.html (som referanse)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">4</div>
+          <div class="step-title">Generer kundesammendrag (ikke-teknisk)</div>
+          <div class="step-meta">Sendes til kunden</div>
+        </div>
+        <div class="step-body">
+          <div class="claude-box">
+            <div class="claude-label">Prompt</div>
+            <div class="claude-prompt">
+              Skriv et kort sammendrag til kunden [kundenavn] som forklarer hva vi fant, hva konsekvensene er og hva som skjer videre. Skriv for en ikke-teknisk mottaker. Unngå sjargong. Maks én side. Funnene er: [lim inn].
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section">
+      <div class="section-label">Hva vi skal bygge — ecomOS-skill (fremtidig)</div>
+      <div class="desc">
+        Neste steg er å lage en dedikert Claude-skill for ecomOS-auditen. Skillet vil inneholde alle instruksjonene over i et strukturert format slik at Claude automatisk vet hva den skal se etter, hvordan den skal prioritere og hva outputen skal inneholde — uten at vi trenger å lime inn prompts manuelt.<br><br>
+        Frem til da: bruk promptene i denne fanen manuelt og lagre funn i et tekstdokument som limes inn i neste prompt.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- LEVERANSE -->
+  <div class="panel" id="panel-output">
+
+    <div class="section">
+      <div class="section-label">Hva vi leverer og til hvem</div>
+
+      <table class="summary-table">
+        <tr><th>Dokument</th><th>Innhold</th><th>Mottaker</th><th>Format</th></tr>
+        <tr>
+          <td>Kundesammendrag</td>
+          <td>Hva vi fant, konsekvenser, neste steg. Ikke-teknisk.</td>
+          <td>Kunden (markedsansvarlig)</td>
+          <td>E-post / PDF</td>
+        </tr>
+        <tr>
+          <td>Teknisk brief</td>
+          <td>Konkrete endringer med kode-eksempler. Prioritert.</td>
+          <td>Plattformutvikler (try.no, Centra-partner)</td>
+          <td>E-post / dokument</td>
+        </tr>
+        <tr>
+          <td>Mediebyrå-notat</td>
+          <td>Hva som er feil med tracking og feed. Hva de bør vente med å optimalisere til dette er fikset.</td>
+          <td>Google- og Meta-byrå</td>
+          <td>E-post</td>
+        </tr>
+        <tr>
+          <td>Utfylt sjekkliste</td>
+          <td>Fullstendig oversikt over hva som er OK og hva som gjenstår.</td>
+          <td>Internt + kunden (valgfritt)</td>
+          <td>HTML (del lenke)</td>
+        </tr>
+        <tr>
+          <td>Feed-referanse</td>
+          <td>Riktig vs. feil feed-eksempler basert på kundens faktiske feed.</td>
+          <td>Plattformutvikler</td>
+          <td>HTML (del lenke)</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Etter leveranse — oppfølging</div>
+      <div class="steps">
+        <div class="step-item"><div class="step-item-num">1</div><div class="step-item-text"><strong>2 uker etter:</strong> Sjekk katalog-match rate i Meta Events Manager — skal begynne å stige etter ID-fix</div></div>
+        <div class="step-item"><div class="step-item-num">2</div><div class="step-item-text"><strong>2 uker etter:</strong> Sjekk GMC for reduserte avvisninger etter feed-oppdatering</div></div>
+        <div class="step-item"><div class="step-item-num">3</div><div class="step-item-text"><strong>4 uker etter:</strong> Sjekk Google Ads konverteringsdata — AddToCart og BeginCheckout skal nå ha data</div></div>
+        <div class="step-item"><div class="step-item-num">4</div><div class="step-item-text"><strong>Løpende:</strong> Oppdater sjekklisten etter hvert som punkter blir fikset</div></div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  function showTab(name) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelector(`[onclick="showTab('${name}')"]`).classList.add('active');
+    document.getElementById(`panel-${name}`).classList.add('active');
+  }
+  function toggleStep(header) {
+    header.parentElement.classList.toggle('open');
+  }
+</script>
+</body>
+</html>
